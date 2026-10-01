@@ -1,0 +1,162 @@
+/* The commercial on an old television in a dark room, and a coupon-paper panel under it */
+:root {
+  --room: #17110d;
+  --room-2: #231a14;
+  --ink: #2a1d17;
+  --muted: #7d6a57;
+  --paper: #f7ead0;
+  --paper-2: #efdcb8;
+  --red: #c8342b;
+  --red-2: #96241e;
+  --gold: #f2c14e;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--paper);
+  background: radial-gradient(ellipse at 50% 0%, var(--room-2), var(--room) 70%);
+  font-family: "Galmuri11", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.page { max-width: 720px; margin: 0 auto; padding: 12px 6px 48px; display: grid; justify-items: center; gap: 14px; }
+
+/* The top bar stays put while the page scrolls under it */
+.top {
+  position: sticky; top: 0; z-index: 5; width: calc(100% + 12px); margin: -12px -6px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px;
+  background: color-mix(in srgb, var(--room) 92%, transparent); backdrop-filter: blur(4px);
+  border-bottom: 1px solid #2c211a;
+}
+body.dark .top { background: rgb(7 3 3 / 0.92); border-bottom-color: #1e0b09; }
+.mark { font-weight: 700; letter-spacing: 2px; color: var(--red); text-shadow: 0 0 1px #000, 1px 1px 0 #000; font-size: 15px; }
+.chip {
+  font: inherit; font-size: 13px; color: var(--paper); background: transparent;
+  border: 2px solid color-mix(in srgb, var(--paper) 45%, transparent); padding: 2px 10px; cursor: pointer;
+}
+.chip[aria-pressed="false"] { opacity: 0.6; }
+.chips { display: flex; gap: 8px; }
+
+/* The television: the stage canvas at a whole-number scale, with the commercial's lettering over it */
+.tv {
+  --scale: 2;
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 176 / 160;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 0 4px #0b0806, 0 0 0 7px #3a2c22, 0 18px 40px rgb(0 0 0 / 0.55);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tv canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.tv.openable { cursor: pointer; }
+.tv.holdable { cursor: grab; }
+.tv.holdable:active { cursor: grabbing; }
+/* The headline glows with a little color fringe, like the commercial's old tape */
+.headline {
+  position: absolute; left: 0; right: 0; top: 4%; margin: 0; text-align: center; pointer-events: none;
+  color: #fff7ea; font-weight: 700; line-height: 1.15;
+  text-shadow: -1px 0 rgb(255 40 80 / 0.55), 1px 0 rgb(40 170 255 / 0.55), 0 0 6px rgb(255 240 220 / 0.9);
+}
+.headline span { display: block; font-size: 7cqw; white-space: nowrap; }
+.headline small { display: block; margin-top: 1.2cqw; font-size: 6cqw; }
+.headline small[hidden] { display: none; }
+
+
+/* The panel under the television: coupon paper with a red dashed edge */
+.panel {
+  width: var(--tvw, min(100%, 560px));
+  padding: 20px 20px 22px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 4px solid var(--red);
+  outline: 2px dashed var(--red);
+  outline-offset: -10px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+}
+.panel[hidden] { display: none; }
+.panel h1, .panel h2 { margin: 0 0 8px; font-size: 20px; line-height: 1.35; color: var(--red-2); }
+.panel p { margin: 0 0 10px; }
+.note { font-size: 13px; color: var(--muted); }
+
+button { font: inherit; }
+.primary {
+  display: block; width: 100%; min-height: 50px; margin-top: 12px; padding: 8px 14px;
+  color: #fff8ea; background: var(--red); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  font-size: 18px; font-weight: 700; cursor: pointer;
+}
+.primary:active, .primary.pressed { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.ghost {
+  min-height: 50px; padding: 8px 14px; color: var(--ink); background: transparent; border: 3px solid var(--ink); cursor: pointer; font-size: 16px;
+}
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+textarea {
+  width: 100%; padding: 10px 12px; resize: none; color: var(--ink); background: #fffaf0;
+  border: 3px solid var(--ink); font: inherit; font-size: 18px; line-height: 1.5;
+}
+textarea:read-only { background: var(--paper-2); }
+.count { text-align: right; font-size: 13px; color: var(--muted); margin: 4px 0 6px !important; }
+/* The last chance to stop: a modal over a darkened page */
+dialog.confirm {
+  width: min(92vw, 420px); padding: 24px 22px 22px; color: #ecd9c0; background: #150b09;
+  border: 4px solid #7a1712; outline: 2px dashed #7a1712; outline-offset: -10px; text-align: center;
+}
+dialog.confirm::backdrop { background: rgb(0 0 0 / 0.8); }
+dialog.confirm[open] { animation: rise 0.5s ease-out; }
+.confirm h2 { margin: 0 0 12px; font-size: 24px; color: #ff5a48; text-shadow: 0 0 10px rgb(255 30 20 / 0.6); }
+.confirm p { margin: 0 0 14px; line-height: 1.7; }
+.confirm .confirm-wish { font-size: 18px; color: #fff3e0; }
+.confirm .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+.confirm .row button { font-size: 16px; margin-top: 0; }
+.confirm .ghost { color: #ecd9c0; border-color: #ecd9c0; }
+.confirm .primary { background: #7a1712; color: #ecd9c0; border-color: #000; box-shadow: 4px 4px 0 #000; }
+
+/* Holding: a pixel bar of how close the stick is to breaking */
+.tension { height: 18px; border: 3px solid var(--ink); background: #fffaf0; }
+.tension b { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--red) 0 8px, var(--red-2) 8px 10px); }
+
+
+/* After the snap: the room is dark, the panel turns to the dark, and the wish is stamped */
+body { transition: background 1.2s; }
+body.dark { background: #070303; }
+body.dark .top .chip { color: #a88; border-color: #533; }
+body.dark .tv { box-shadow: 0 0 0 4px #000, 0 0 0 7px #2a0d0b, 0 0 60px rgb(140 10 10 / 0.25); }
+.panel.granted { color: #ecd9c0; background: #150b09; border-color: #7a1712; outline-color: #7a1712; text-align: center; animation: rise 1.6s ease-out; }
+.granted .kicker { font-size: 13px; color: #8f7462; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px !important; }
+.granted .my-wish { font-size: 20px; margin-bottom: 18px !important; }
+.granted .note { color: #8f7462; }
+.stamp {
+  display: inline-block; margin: 0 0 16px !important; padding: 6px 16px 4px;
+  color: #d0261c; border: 4px double #d0261c; transform: rotate(-5deg);
+  font-size: 28px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase;
+  text-shadow: 0 0 10px rgb(208 38 28 / 0.5);
+}
+.granted .primary { background: #7a1712; color: #ecd9c0; border-color: #000; box-shadow: 4px 4px 0 #000; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+.headline.red { color: #ff5a48; text-shadow: -1px 0 rgb(255 0 40 / 0.7), 1px 0 rgb(0 120 255 / 0.4), 0 0 10px rgb(255 30 20 / 0.8); }
+.headline.rise { animation: emerge 1.4s ease-out both; }
+@keyframes emerge { from { opacity: 0; filter: blur(3px); } to { opacity: 1; filter: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .headline.rise, .panel.granted { animation: none; }
+}
+
+/* Shown only when the game's code failed to load */
+.stalled { width: 100%; margin: 0; padding: 10px 14px; text-align: center; color: #fff3e0; background: #7a1712; border: 2px solid #000; }
+.stalled a { color: #fff; font-weight: 700; }
+
+/* The wish, stuck on over and over until it covers everything; it fades away slowly */
+.wall { position: fixed; inset: 0; z-index: 50; width: 100vw; height: 100vh; pointer-events: none; transition: opacity 1.3s ease-in; }
+.wall[hidden] { display: none; }
+.wall.fade { opacity: 0; }

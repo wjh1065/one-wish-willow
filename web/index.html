@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>One Wish Willow</title>
+  <meta name="description" content="You only get one wish. Break the willow. It will be granted.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='5' width='14' height='6' fill='%234b2a1b'/%3E%3Crect x='3' y='7' width='4' height='1' fill='%23fff'/%3E%3Crect x='9' y='8' width='4' height='1' fill='%23fff'/%3E%3C/svg%3E">
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <span class="mark">ONE WISH WILLOW</span>
+      <span class="chips">
+        <button type="button" class="chip" id="reset">Reset</button>
+        <button type="button" class="chip" id="sound" aria-pressed="true">Sound on</button>
+      </span>
+    </header>
+
+    <div class="tv" id="tv">
+      <canvas id="stage" width="176" height="160" aria-label="The willow stick"></canvas>
+      <p class="headline" id="headline" aria-live="polite"><span id="headline-line"></span><small id="headline-small"></small></p>
+    </div>
+
+    <section class="panel" id="panel-ad">
+      <h1>Make one wish.</h1>
+      <p>Break the willow in two.<br>Your wish will come true.</p>
+      <p class="note">One wish per person. Forever.</p>
+      <button type="button" class="primary" id="open-box">Open the box</button>
+    </section>
+
+    <section class="panel" id="panel-wish" hidden>
+      <h2><label for="wish">What do you wish for?</label></h2>
+      <textarea id="wish" maxlength="60" rows="2" placeholder="I wish..." enterkeyhint="done"></textarea>
+      <p class="count" id="wish-count">0/60</p>
+      <p class="note">Choose carefully.</p>
+      <button type="button" class="primary" id="make-wish" disabled>Make my wish</button>
+    </section>
+
+    <dialog class="confirm" id="confirm" aria-labelledby="confirm-title">
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p class="confirm-wish" id="confirm-wish"></p>
+      <p>Once the willow breaks,<br>it cannot be undone.<br>You only get one chance.</p>
+      <div class="row">
+        <button type="button" class="ghost" id="confirm-no">Wait</button>
+        <button type="button" class="primary" id="confirm-yes">I'm sure</button>
+      </div>
+    </dialog>
+
+    <section class="panel" id="panel-snap" hidden>
+      <h2>Break it with both hands.</h2>
+      <p id="snap-hint">Press and hold both fists.</p>
+      <div class="tension" aria-hidden="true"><b id="tension-fill"></b></div>
+    </section>
+
+    <section class="panel granted" id="panel-granted" hidden>
+      <p class="kicker">Your one wish</p>
+      <p class="my-wish" id="my-wish"></p>
+      <p class="stamp">Granted</p>
+      <p class="note" id="wished-on"></p>
+      <button type="button" class="primary" id="save-card">Save card</button>
+    </section>
+
+  </main>
+  <canvas class="wall" id="wall" aria-hidden="true" hidden></canvas>
+  <script type="module" src="js/main.js"></script>
+  <script>
+    // If the game's code did not arrive (the server was restarting, a stale copy), say so instead of a dead button
+    setTimeout(() => {
+      if (window.willow) return;
+      const note = document.createElement("p");
+      note.className = "stalled";
+      note.innerHTML = 'The willow didn\'t load. <a href="">Reload the page</a>.';
+      document.querySelector(".page").prepend(note);
+    }, 4000);
+  </script>
+</body>
+</html>
